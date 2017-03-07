@@ -16,33 +16,15 @@ volatile uint8_t edge_counter __attribute__ ((section (".noinit")));
 
 ISR(CS_INT_VECTOR)
 {
-	//register uint8_t tmp_cd;
-	//register uint8_t tmp_address;
-	//register uint8_t wait_counter;
-
 	if ( READ_CS == 0 ) //i.e. CS low, the beginning
 	{
 		edge_counter = 0;
-		//wait_counter = 250;
-		//do
-		//{
-		//	tmp_cd = READ_CD;
-		//	tmp_address = READ_DATA;
-		//	wait_counter--;
-		//} while ((READ_CS == 0) && (READ_STB != 0) && (wait_counter != 0));
-
-		//if ((READ_CS == 0) && (READ_STB == 0))
-		//{
-		//	cd_address = (tmp_cd & CD_MASK) | (tmp_address & DATA_MASK);
-			//SET_CS_INT_ON_RISING;
-			STB_INT_ENABLE;
-			SET_STB_INT_ON_FALLING;
-		//}
+		STB_INT_ENABLE;
+		SET_STB_INT_ON_FALLING;
 	}
 	else //i.e. CS high, the end
 	{
 		STB_INT_DISABLE;
-		//SET_CS_INT_ON_FALLING;
 		if ( edge_counter == 2 )
 		{
 			BUSY_LOW;
@@ -98,11 +80,9 @@ void parallel_init( void )
 
 	SET_STB_IN;
 	STB_NO_PULL_UP;
-	//STB_PULL_UP;
 
 	SET_CS_IN;
 	CS_NO_PULL_UP;
-	//CS_PULL_UP;
 
 	SET_CS_INT_ON_CHANGE;
 	STB_INT_DISABLE;
